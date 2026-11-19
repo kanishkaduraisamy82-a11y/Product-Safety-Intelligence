@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product Safety Intelligence</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <svg class="brand-ic" viewBox="0 0 24 24"><path d="M12 2l8 3v6c0 5-3.5 9.5-8 11-4.5-1.5-8-6-8-11V5z"/><polyline points="8.5 12 11 14.5 15.5 9.5"/></svg>
+    <span>PRODUCT SAFETY INTELLIGENCE</span>
+  </div>
+  <nav>
+    <button class="nav-btn active" data-page="dashboard"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</button>
+    <button class="nav-btn" data-page="documents"><svg class="ic" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Documents</button>
+    <button class="nav-btn" data-page="investigate"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>New Investigation</button>
+    <button class="nav-btn" data-page="recalls"><svg class="ic" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Recall Search</button>
+    <button class="nav-btn" data-page="verify"><svg class="ic" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Product Verification</button>
+    <button class="nav-btn" data-page="ask"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Ask Documents</button>
+    <button class="nav-btn" data-page="history"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>History &amp; Reports</button>
+    <button class="nav-btn" data-page="settings"><svg class="ic" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>Settings</button>
+  </nav>
+  <div class="side-foot">AI findings are preliminary and not official regulatory records.</div>
+</aside>
+
+<main class="main">
+<div id="toast" class="toast" role="status"></div>
+
+<!-- DASHBOARD -->
+<section id="page-dashboard" class="page active">
+  <h1>Dashboard</h1>
+  <div id="stats" class="stats"></div>
+  <div class="grid-2">
+    <div class="card"><h3>Risk distribution</h3><div id="risk-dist"></div></div>
+    <div class="card"><h3>Recent documents</h3><div id="recent-docs"></div></div>
+  </div>
+  <div class="card"><h3>Investigation history</h3><div id="dash-history" class="table-wrap"></div></div>
+  <div class="card"><h3>Recent product recalls found in your documents</h3><div id="dash-recalls" class="table-wrap"></div></div>
+</section>
+
+<!-- DOCUMENTS -->
+<section id="page-documents" class="page">
+  <h1>Documents</h1>
+  <div class="card">
+    <h3>Upload documents</h3>
+    <p class="muted">PDF, DOCX or TXT. You can select several files at once.</p>
+    <div class="row">
+      <input type="file" id="file-input" multiple accept=".pdf,.docx,.txt">
+      <button class="btn" id="upload-btn">Upload and process</button>
+    </div>
+    <div id="upload-result"></div>
+  </div>
+  <div class="card"><h3>Uploaded documents</h3><div id="doc-list" class="table-wrap"></div></div>
+</section>
+
+<!-- INVESTIGATE -->
+<section id="page-investigate" class="page">
+  <h1>New investigation</h1>
+  <div class="card">
+    <form id="inv-form" class="form-grid" autocomplete="off">
+      <label>Product name *<input name="product_name" required maxlength="300"></label>
+      <label>Brand name<input name="brand" maxlength="300"></label>
+      <label>Manufacturer<input name="manufacturer" maxlength="300"></label>
+      <label>Model number<input name="model_number" maxlength="300"></label>
+      <label>Batch number<input name="batch_number" maxlength="300"></label>
+      <label>Serial number<input name="serial_number" maxlength="300"></label>
+      <label>Product category<input name="category" maxlength="300"></label>
+      <label class="wide">Investigation description<textarea name="description" rows="4" maxlength="5000" placeholder="What do you want to find out? For example: overheating complaints, possible recall, batch 2024-17."></textarea></label>
+      <div class="wide"><button class="btn" type="submit" id="inv-btn">START INVESTIGATION</button></div>
+    </form>
+  </div>
+  <div id="inv-progress"></div>
+  <div id="inv-result"></div>
+</section>
+
+<!-- RECALLS -->
+<section id="page-recalls" class="page">
+  <h1>Recall search</h1>
+  <div class="card">
+    <form id="recall-form" class="form-grid" autocomplete="off">
+      <label>Product name<input name="product_name"></label>
+      <label>Brand<input name="brand"></label>
+      <label>Manufacturer<input name="manufacturer"></label>
+      <label>Product category<input name="category"></label>
+      <div class="wide"><button class="btn" type="submit" id="recall-btn">Search recalls</button></div>
+    </form>
+  </div>
+  <div id="recall-result"></div>
+  <div class="card"><h3>Official recall sources</h3><div id="sources"></div></div>
+</section>
+
+<!-- VERIFY -->
+<section id="page-verify" class="page">
+  <h1>Product verification</h1>
+  <div class="card">
+    <p class="muted">Compare product details with the evidence in your uploaded documents.</p>
+    <form id="verify-form" class="form-grid" autocomplete="off">
+      <label>Product name *<input name="product_name" required></label>
+      <label>Brand<input name="brand"></label>
+      <label>Manufacturer<input name="manufacturer"></label>
+      <label>Model number<input name="model_number"></label>
+      <label>Batch number<input name="batch_number"></label>
+      <label>Serial number<input name="serial_number"></label>
+      <div class="wide"><button class="btn" type="submit" id="verify-btn">Verify product</button></div>
+    </form>
+  </div>
+  <div id="verify-result"></div>
+</section>
+
+<!-- ASK -->
+<section id="page-ask" class="page">
+  <h1>Ask your documents</h1>
+  <div class="card">
+    <textarea id="ask-q" rows="3" placeholder="For example: Which batches are affected by the recall?"></textarea>
+    <div class="row"><button class="btn" id="ask-btn">Ask</button></div>
+  </div>
+  <div id="ask-result"></div>
+</section>
+
+<!-- HISTORY -->
+<section id="page-history" class="page">
+  <h1>History &amp; reports</h1>
+  <div class="card"><div id="history-list" class="table-wrap"></div></div>
+  <div id="history-detail"></div>
+</section>
+
+<!-- SETTINGS -->
+<section id="page-settings" class="page">
+  <h1>Settings</h1>
+  <div class="card">
+    <h3>Nexus API</h3>
+    <table class="kv">
+      <tr><th>API key</th><td id="set-key">Checking...</td></tr>
+      <tr><th>Connection</th><td id="set-conn">Not tested yet</td></tr>
+      <tr><th>Base URL</th><td id="set-url"></td></tr>
+      <tr><th>Selected model</th><td id="set-model"></td></tr>
+    </table>
+    <div class="row"><button class="btn" id="test-btn">TEST API CONNECTION</button></div>
+    <div id="model-picker" class="hidden">
+      <h3>Choose a model</h3>
+      <div class="row"><select id="model-select"></select><button class="btn" id="model-save">Save model</button></div>
+    </div>
+    <p class="muted">The API key is stored only in the backend <code>.env</code> file and is never shown here.</p>
+  </div>
+</section>
+</main>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
